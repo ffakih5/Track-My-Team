@@ -12,6 +12,7 @@ const connection = mysql.createConnection({
 const afterConnection = () =>{
     connection.query('SELECT * FROM employee',(err, res) => {
         if (err) throw err;
+        console.log(res);
         connection.end();
 
 
