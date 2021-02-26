@@ -9,9 +9,19 @@ const connection = mysql.createConnection({
 });
 
 //remember to close connection! #memory issues! 
+const afterConnection = () =>{
+    connection.query('SELECT * FROM employee',(err, res) => {
+        if (err) throw err;
+        connection.end();
+
+
+    })
+}
 
 connection.connect((err) =>{
     if (err) throw err;
     console.log(`connected as id ${connection.threadId}`);
-    connection.end();
+    afterConnection();
+    
 });
+
