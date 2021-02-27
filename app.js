@@ -99,8 +99,9 @@ const optionsOne = () => {
   };
 
   const readEmployees = () => {
-    connection.query('SELECT * FROM employee',(err, res) => {
-        if (err) throw err;
+      const query = 'SELECT * FROM employee';
+      connection.query((err, res)  => {
+        if (err) throw err; 
         console.log(res);
         console.table('All employees:', res);
         optionsOne();
@@ -108,7 +109,16 @@ const optionsOne = () => {
 
   };
 
-  
+  const readDepartments = () => {
+    connection.query('SELECT * FROM department',(err, res) => {
+        if (err) throw err;
+        console.log(res);
+        console.table('All Departments:', res);
+        optionsOne();
+    })
+
+  };
+
   
 
 
