@@ -90,14 +90,28 @@ const optionsOne = () => {
           case 'EXIT database':
             exitDB();
             break;
-            
+
           default:
             console.log(`Invalid action: ${answer.action}`);
             break;
         }
       });
   };
+
+  const readEmployees = () => {
+    connection.query('SELECT * FROM employee',(err, res) => {
+        if (err) throw err;
+        console.log(res);
+        console.table('All employees:', res);
+        optionsOne();
+    })
+
+  };
+
   
+  
+
+
 
 //remember to close connection! #memory issues! 
 const afterConnection = () => {
