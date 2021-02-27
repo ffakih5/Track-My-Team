@@ -14,10 +14,10 @@ connection.connect((err) =>{
     if (err) throw err;
     console.log(`connected as id ${connection.threadId}`);
     //afterConnection();
-    optionsArray();
+    optionsOne();
 });
 
-const optionsArray = () => {
+const optionsOne = () => {
     inquirer
       .prompt({
         name: 'action',
@@ -29,7 +29,45 @@ const optionsArray = () => {
           'Read all roles',
           'Create an employee',
           'Create a department',
-          'Creata role',
+        ],
+      })
+      .then((answer) => {
+        switch (answer.action) {
+          case 'Read all employees':
+            readEmployees();
+            break;
+  
+          case 'Read all departments':
+            readDepartments();
+            break;
+  
+          case 'Read all roles':
+            readRoles();
+            break;
+  
+          case 'Create an employee':
+            createEmployee();
+            break;
+  
+          case 'Create a department':
+            songAndAlbumSearch();
+            break;
+  
+          default:
+            console.log(`Invalid action: ${answer.action}`);
+            break;
+        }
+      });
+  };
+  optionsTwo();
+  const optionsTwo = () => {
+    inquirer
+      .prompt({
+        name: 'action',
+        type: 'rawlist',
+        message: 'What would you like to do?',
+        choices: [
+          'Creat a role',
           'Update a current role',
           'Delete an employee',
           'EXIT database'
@@ -45,8 +83,8 @@ const optionsArray = () => {
             readDepartments();
             break;
   
-          case 'Find data within a specific range':
-            rangeSearch();
+          case 'Read all roles':
+            readRoles();
             break;
   
           case 'Search for a specific song':
