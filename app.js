@@ -75,26 +75,22 @@ const optionsOne = () => {
       })
       .then((answer) => {
         switch (answer.action) {
-          case 'Read all employees':
-            readEmployees();
+          case 'Create a role':
+            createRole();
             break;
   
-          case 'Read all departments':
-            readDepartments();
+          case 'Update a current role':
+            updateRole();
             break;
   
-          case 'Read all roles':
-            readRoles();
+          case 'Delete an employee':
+            deleteEmployee();
             break;
   
-          case 'Search for a specific song':
-            songSearch();
+          case 'EXIT database':
+            exitDB();
             break;
-  
-          case 'Find artists with a top song and top album in the same year':
-            songAndAlbumSearch();
-            break;
-  
+            
           default:
             console.log(`Invalid action: ${answer.action}`);
             break;
