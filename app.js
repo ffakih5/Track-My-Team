@@ -13,32 +13,36 @@ const connection = mysql.createConnection({
 connection.connect((err) =>{
     if (err) throw err;
     console.log(`connected as id ${connection.threadId}`);
-    afterConnection();
-    
+    //afterConnection();
+    optionsArray();
 });
 
-const runSearch = () => {
+const optionsArray = () => {
     inquirer
       .prompt({
         name: 'action',
         type: 'rawlist',
         message: 'What would you like to do?',
         choices: [
-          'Find songs by artist',
-          'Find all artists who appear more than once',
-          'Find data within a specific range',
-          'Search for a specific song',
-          'Find artists with a top song and top album in the same year',
+          'Read all employees',
+          'Read all departments',
+          'Read all roles',
+          'Create an employee',
+          'Create a department',
+          'Creata role',
+          'Update a current role',
+          'Delete an employee',
+          'EXIT database'
         ],
       })
       .then((answer) => {
         switch (answer.action) {
-          case 'Find songs by artist':
-            artistSearch();
+          case 'Read all employees':
+            readEmployees();
             break;
   
-          case 'Find all artists who appear more than once':
-            multiSearch();
+          case 'Read all departments':
+            readDepartments();
             break;
   
           case 'Find data within a specific range':
