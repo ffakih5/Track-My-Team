@@ -103,21 +103,33 @@ const optionsOne = () => {
       connection.query((err, res)  => {
         if (err) throw err; 
         console.log(res);
-        console.table('All employees:', res);
+        consoleTable('All employees:', res);
         optionsOne();
-    })
+    });
 
   };
 
-  const readDepartments = () => {
-    connection.query('SELECT * FROM department',(err, res) => {
+    const readDepartments = () => {
+      const query = 'SELECT * FROM department';
+      connection.query(query,(err, res) => {
         if (err) throw err;
         console.log(res);
-        console.table('All Departments:', res);
+        consoleTable('All Departments:', res);
         optionsOne();
-    })
+    });
 
   };
+
+  const readRoles = () => {
+      const query = 'SELECT * FROM roles';
+      connection.query(query,(err, res) => {
+          if (err) throw err;
+          consoleTable('All Roles;', res)
+          optionsOne()
+
+      })
+
+  }
 
   
 
