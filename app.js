@@ -183,16 +183,89 @@ const optionsOne = () => {
                     (err) => {
                         if (err) throw err;
                         console.log("Employee added!");
+                        optionsOne();
+                    });
+            });
+      });
 
+  };
 
-                    }
-                )
-
+  const createDepartment = () => {
+      inquirer
+        .prompt([
+            {
+                name: 'addDepartment',
+                type: 'input',
+                message: "Which department would you like to add?",
             }
+        ]).then (function (answer) {
+            connection.query(
+                'INSERT INTO department SET ? ',
+                {
+                    name: answer.addDepartment
+                });
+                const query = 'SELECT * FROM department';
+                connection.query(query,(err, res) => { 
+                    if (err) throw err;
+                    console.log("Department added!");
+                    consoleTable('All Departments:', res);
+                    optionsTwo()
+                });
+        });
 
-      })
+  };
 
-  }
+  const createRole = () => {
+      connection.query('SELECT * FROM department', (err, res) => {
+          if (err) throw err;
+
+          inquirer
+            .prompt([
+                {
+                    name: 'create_role',
+                    type: 'input',
+                    message: "What new role are you creating?"
+                },
+                {
+                    name: 'salary',
+                    type: 'input',
+                    message: "What is the salary of this role? (answer in numeric symbols)"
+                },
+                {
+                    name: 'department',
+                    type: 'list',
+                    choices: () => {
+                        const departmentArray = [];
+                        for (let i = 0; i < res.length; i++) {
+
+                        }
+                        return departmentArray;
+                    }
+                },
+            ]).then(function (answer){
+                let department_id;
+                for(let d = 0; d < res.length; d++){
+                    if (res[d].name === answer.department) {
+                        department_id = res[d].id;
+                    }
+                }
+                connection.query(
+                    'INSERT INTO role SET ?', 
+                    {
+                        title: answer.create_role,
+                        salary: answer.salary,
+                        department_id: department_id,
+                    }, 
+                    (err,res) => {
+                        if (err) throw err;
+                        console.log("New role added!");
+                        consoleTable('All Roles:', res);
+                        optionsTwo();
+                    });
+            });
+      });
+
+  };
 
   
 
@@ -203,6 +276,7 @@ const afterConnection = () => {
     connection.query('SELECT * FROM employee',(err, res) => {
         if (err) throw err;
         console.log(res);
+        
 
 
 
