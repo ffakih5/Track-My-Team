@@ -98,7 +98,7 @@ const optionsOne = () => {
       });
   };
 
-  const readEmployees = () => {
+  function readEmployees () {
       const query = 'SELECT * FROM employee';
       connection.query((err, res)  => {
         if (err) throw err; 
@@ -109,7 +109,7 @@ const optionsOne = () => {
 
   };
 
-    const readDepartments = () => {
+    function readDepartments () {
       const query = 'SELECT * FROM department';
       connection.query(query,(err, res) => {
         if (err) throw err;
@@ -120,7 +120,7 @@ const optionsOne = () => {
 
   };
 
-  const readRoles = () => {
+  function readRoles () {
       const query = 'SELECT * FROM roles';
       connection.query(query,(err, res) => {
           if (err) throw err;
@@ -131,7 +131,7 @@ const optionsOne = () => {
 
   };
 
-  const createEmployee = () => {
+  function createEmployee () {
       connection.query('SELECT * FROM roles', (err,res) => {
           if (err) throw err;
           inquirer
@@ -190,7 +190,7 @@ const optionsOne = () => {
 
   };
 
-  const createDepartment = () => {
+  function createDepartment () {
       inquirer
         .prompt([
             {
@@ -215,7 +215,7 @@ const optionsOne = () => {
 
   };
 
-  const createRole = () => {
+  function createRole () {
       connection.query('SELECT * FROM department', (err, res) => {
           if (err) throw err;
 
@@ -266,6 +266,7 @@ const optionsOne = () => {
       });
 
   };
+
 
   
 
