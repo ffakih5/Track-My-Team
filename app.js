@@ -127,6 +127,22 @@ const optionsOne = () => {
           consoleTable('All Roles;', res)
           optionsOne()
 
+      });
+
+  };
+
+  const createEmployee = () => {
+      connection.query('SELECT * FROM roles', (err,res) => {
+          if (err) throw err;
+          inquirer
+            .prompt([
+                {
+                    name: 'first_name',
+                    type: 'input',
+                    message: "What is the employee's first name?"
+                }
+            ])
+
       })
 
   }
