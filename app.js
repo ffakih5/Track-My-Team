@@ -139,32 +139,19 @@ const options = () => {
                     message: "What is the employee's manager's ID?",
                 },
                 {
-                    name: 'role_id',
-                    type: 'list',
-                    choices: () => {
-                        const roleArray = [];
-                        for (let i = 0; i < res.length; i++) {
-                            roleArray.push(res[i].title);
-                        }
-                        return roleArray;
-
-                    },
-                    message: "What is this employee's role?",
+                    name: 'employeeId',
+                    type: 'input',
+                    message: "What is this employee's role ID?",
                 }
             ]).then (function (answer) {
-                let empRole;
-                for (let r = 0; r < res.length; r++) {
-                    if (res[r].title === answer.role) {
-                        empRole = res[i].id;
-                    }
-                }
                 connection.query(
                     'INSERT INTO employee SET ?',
                     {
                         first_name: answer.first_name,
                         last_name: answer.last_name,
                         manager_id: answer.manager_id,
-                        role_id: role_id,
+                        role_id: answer.employeeId,
+                        
                     },
                     (err) => {
                         if (err) throw err;
@@ -300,7 +287,7 @@ function updateRole() {
                     }
                     
                     connection.query(
-                        `UPDATE employee SET role_id = ${currentRole}WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
+                        `UPDATE employee SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
                         (err, res) => {
                             if(err) throw err;
                             console.log("This employee's role has now been updated");
