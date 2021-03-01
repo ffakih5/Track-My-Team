@@ -1,6 +1,5 @@
 const mysql = require ('mysql');
 const inquirer = require ('inquirer');
-const consoleTable = require ('console.table')
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -10,14 +9,14 @@ const connection = mysql.createConnection({
     database: 'team_db',
 });
 
-connection.connect((err) =>{
+connection.connect((err) => {
     if (err) throw err;
     console.log(`connected as id ${connection.threadId}`);
     //afterConnection();
-    optionsOne();
+    options();
 });
 
-const optionsOne = () => {
+const options = () => {
     inquirer
       .prompt({
         name: 'action',
@@ -29,6 +28,10 @@ const optionsOne = () => {
           'Read all roles',
           'Create an employee',
           'Create a department',
+          'Create a role',
+          'Update a current role',
+          'Delete an employee',
+          'EXIT database'
         ],
       })
       .then((answer) => {
@@ -52,59 +55,42 @@ const optionsOne = () => {
           case 'Create a department':
             createDepartment();
             break;
-  
-          default:
-            console.log(`Invalid action: ${answer.action}`);
-            break;
-        }
-      });
-  };
-  optionsTwo();
-  const optionsTwo = () => {
-    inquirer
-      .prompt({
-        name: 'action',
-        type: 'rawlist',
-        message: 'What would you like to do?',
-        choices: [
-          'Creat a role',
-          'Update a current role',
-          'Delete an employee',
-          'EXIT database'
-        ],
-      })
-      .then((answer) => {
-        switch (answer.action) {
-          case 'Create a role':
+        case 'Create a role':
             createRole();
             break;
-  
-          case 'Update a current role':
+    
+            case 'Update a current role':
             updateRole();
             break;
-  
-          case 'Delete an employee':
+    
+            case 'Delete an employee':
             deleteEmployee();
             break;
-  
-          case 'EXIT database':
-            exitDB();
+    
+            case 'EXIT database':
+            //exitDB();
             break;
 
+          
+  
           default:
             console.log(`Invalid action: ${answer.action}`);
             break;
-        }
-      });
+        } 
+      })
+        .catch((err) => {
+          console.log(err)
+
+      })
   };
+  
 
   function readEmployees () {
       const query = 'SELECT * FROM employee';
-      connection.query((err, res)  => {
+      connection.query(query,(err, res)  => {
         if (err) throw err; 
-        console.log(res);
-        consoleTable('All employees:', res);
-        optionsOne();
+        console.table(res);
+        options();
     });
 
   };
@@ -114,19 +100,19 @@ const optionsOne = () => {
       connection.query(query,(err, res) => {
         if (err) throw err;
         console.log(res);
-        consoleTable('All Departments:', res);
-        optionsOne();
+        console.table(res);
+        options();
     });
 
   };
 
   function readRoles () {
+      console.log('readRoles');
       const query = 'SELECT * FROM roles';
       connection.query(query,(err, res) => {
           if (err) throw err;
-          consoleTable('All Roles;', res)
-          optionsOne()
-
+          console.table(res);
+          options()
       });
 
   };
@@ -183,7 +169,7 @@ const optionsOne = () => {
                     (err) => {
                         if (err) throw err;
                         console.log("Employee added!");
-                        optionsOne();
+                        options();
                     });
             });
       });
@@ -202,14 +188,14 @@ const optionsOne = () => {
             connection.query(
                 'INSERT INTO department SET ? ',
                 {
-                    name: answer.addDepartment
+                    department_name: answer.addDepartment
                 });
                 const query = 'SELECT * FROM department';
                 connection.query(query,(err, res) => { 
                     if (err) throw err;
                     console.log("Department added!");
-                    consoleTable('All Departments:', res);
-                    optionsTwo()
+                    console.table(res);
+                    options()
                 });
         });
 
@@ -237,8 +223,10 @@ const optionsOne = () => {
                     choices: () => {
                         const departmentArray = [];
                         for (let i = 0; i < res.length; i++) {
-
+                            console.log(i);
+                            departmentArray.push(res[i].department_name);
                         }
+                        console.log(departmentArray);
                         return departmentArray;
                     }
                 },
@@ -250,7 +238,7 @@ const optionsOne = () => {
                     }
                 }
                 connection.query(
-                    'INSERT INTO role SET ?', 
+                    'INSERT INTO roles SET ?', 
                     {
                         title: answer.create_role,
                         salary: answer.salary,
@@ -259,13 +247,47 @@ const optionsOne = () => {
                     (err,res) => {
                         if (err) throw err;
                         console.log("New role added!");
-                        consoleTable('All Roles:', res);
-                        optionsTwo();
+                        console.table(res);
+                        options();
                     });
             });
       });
 
   };
+
+  /*function updateRole() {
+    connection.query('UPDATE employee SET?  WHERE?', 
+
+        {   first_name: answer.first_name,
+            last_name: answer.last_name,
+        },
+        (err, res) => {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'role_update',
+                    type: 'list',
+                    choices: () => {
+                        const roleArray = [];
+                        for (let i = 0; i < res.length; i++) {
+
+                        }
+                        return roleArray;
+                    }
+                }
+            ]).then(function (answer){
+                let department_id;
+                for(let d = 0; d < res.length; d++){
+                    if (res[d].name === answer.department) {
+                        department_id = res[d].id;
+                    }
+                }
+            }
+        }
+    }
+
+  }*/
 
 
   
