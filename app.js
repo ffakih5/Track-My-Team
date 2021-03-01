@@ -266,7 +266,7 @@ function updateRole() {
     const employeeArray = [];
     const roleArray = [];
 
-    connection.query(`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM team_db.employee` ,
+    connection.query(`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM employee` ,
     (error, res) => {
         if (error) throw error;
         for(let i = 0; i < res.length; i++){
@@ -298,14 +298,14 @@ function updateRole() {
                 let currentRole;
                 const name = answer.name.split(' ');
                 connection.query(
-                    `SELECT id FROM team_db.role WHERE title = '${answer.role}'`,
+                    `SELECT id FROM role WHERE title = '${answer.role}'`,
                     (err, res) => {
                     if (err) throw err;
                     for (let i = 0; d < res.length; i++){
                     currentRole = res[i].id;
                     }
                     connection.query(
-                        `UPDATE team_db SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
+                        `UPDATE role SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
                         (err, res) => {
                             if(err) throw err;
                             console.log("This employee's role has now been updated");
