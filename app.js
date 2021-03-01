@@ -262,67 +262,24 @@ const options = () => {
 
   };
 
-  function updateRole(){
-    connection.query('SELECT * FROM employee;', (err, res) => {
-        if(err) throw err;
-    
-            ]).then((data) => { 
-                connection.query(
-                    `SELECT * FROM employee WHERE first_name = ? AND last_name = ?;`, [data.first_name, data.last_name], (err, res) => {
-                    if(err) throw err;
-
-                    const table = consoleTable.getTable(res); 
-                    employee_id = res[0].id;
-                    console.log(`Selected Employee: \n ${table}`);
-                    
-                    inquirer
-                        .prompt([
-                            {
-                                name: 'new_role',
-                                type: 'rawlist',
-                                message: "What is the employee's new role?",
-                                choices: role_options
-                                
-                            }
-                        ]).then((data) => {
-                            connection.query(
-                                `SELECT id FROM roles WHERE role_name = ?`, [data.new_role], (err, res) => {
-                                    if (err) throw err;
-                                    updatedRoleId = res[0].id;
-                                    console.log(`role id: ${updatedRoleId}`);
-                                    connection.query(
-                                        `UPDATE employee SET role_id = ? WHERE id = ?`, [updatedRoleId, employee_id], (err, res) => {
-                                            if(err) throw err;
-                                            console.log("This employee's role has now been updated");
-                                            options();
-                                        });
-                                });
-                        });
-                    }); 
-            });
-} 
-
-
-
 function updateRole() {
     const employeeArray = [];
     const roleArray = [];
 
-    connection.query.then((data) => {
-        (`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM team_db.employee` ,
+    connection.query(`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM team_db.employee` ,
     (error, res) => {
-      if (error) throw error;
-      for(let i = 0; i < res.length; i++){
+        if (error) throw error;
+        for(let i = 0; i < res.length; i++){
           employeeArray.push(res[i].employee);
       }
       connection.query(
-          `SELECT title FROM team_db.role`, (err, res) => {
-              if (err) throw err;
-              for(let i = 0; i <res.length; i++) {
-                  roleArray.push(res[i].title);
-              }
-              
-              inquirer
+        `SELECT title FROM team_db.role`, (err, res) => {
+            if (err) throw err;
+            for(let i = 0; i <res.length; i++) {
+                roleArray.push(res[i].title);
+            }
+
+            inquirer
                 .prompt([
                 {
                         name: 'name',
@@ -335,169 +292,34 @@ function updateRole() {
                         name: 'role',
                         type: 'input',
                         choices: roleArray,
-                        message: "What are you uodating their role to?",
+                        message: "What are you updating their role to?",
                 },
-
-
-
-
-    });
-
-
-
-    }
-
-
-    inquirer
-        .prompt([
-            
-        ]).then ((data) => {
-            connection.query('SELECT * FROM employee WHERE first_name = ? AND last_name = ? ;',[data.first_name, data.last_name], (err, res) => {
-                if(err) throw err;
-            
-            inquirer
-                .prompt([
-                    {
-                        name: 'update_role',
-                        type: 'input',
-                        message: "Which employee would you like to update?",
-                    },
-                    {   
-                    name: 'new_role',
-                    type: 'rawlist',
-                    choices: () => {
-                        const newRole = [];
-                        for (let i = 0; i < res.length; i++) {
-                            newRole.push(res[i].title);
-                        }
-                        return newRole;
-                },
-                message: "What is the employee's new role title?",
-            }
-                               
-            ]).then (function (answer){
-                let ;
-                for(let r = 0; d < res.length; r++){
-                    if (res[r].name === answer.role) {
-                        role_id = res[i].id;
-                    }
-                }
+            ]).then (answer => {
+                let currentRole;
+                const name = answer.name.split(' ');
                 connection.query(
-                    'INSERT INTO roles SET ?', 
-                    {
-                        title: answer.create_role,
-                        salary: answer.salary,
-                        role_id: role_id,
-                    }, 
-                    (err,res) => {
-                        if (err) throw err;
-                        console.log("New role added!");
-                        console.table(res);
-                        options();
-                    });
-
-            });
-            
-        
-        
-
-
-
-
-
-
-    
-    
-    inquirer
-      .prompt([
-        {
-          name: '',
-          type: 'rawlist',
-          choices: readEmployees,
-          message: "Which employee would you like to update?",
-        },
-        {
-          name: 'title',
-          type: 'rawlist',
-          choices: readRoles,
-          message: "What is the employee's new role?",
-          
-        }
-      ])
-      .then(function (answer) {
-
-        updateRole(answer);
-      })
-  }
-  
-
-    options();
-  }
-
-
-  /*function updateRole() {
-
-        
-                {
-                    name: 'last_name',
-                    type: 'rawlist',
-                    choices: () => {
-                        const lastName = [];
-                        for (let i = 0; i < res.length; i++) {
-                            lastName.push(res[i].last_name);
-
-                        }
-                        return lastName;
-                    },
-                    message: "What is the employee's last name?",
-                },
-                {
-                    name: 'role',
-                    type:'rawlist',
-                    choices: () => {
-                        const roleArray = [];
-                        for (let i = 0; i < res.length; i++) {
-                            roleArray.push(res[i].title);
-                        }
-                        return roleArray;
-                },
-                message: "What is the employee's new role title?",
-            }
-
-            ]).then (function (answer) {
-                let role_id;
-                for (let r = 0; r < res.length; r++) {
-                    if (res[r].title === answer.role) {
-                        role_id = res[i].id;
-                        console.log(role_id);
+                    `SELECT id FROM team_db.role WHERE title = '${answer.role}'`,
+                    (err, res) => {
+                    if (err) throw err;
+                    for (let i = 0; d < res.length; i++){
+                    currentRole = res[i].id;
                     }
-                }
+                    connection.query(
+                        `UPDATE team_db SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
+                        (err, res) => {
+                            if(err) throw err;
+                            console.log("This employee's role has now been updated");
+                            options();
+                           }
+                        );
+                      }
+                    );
+                });
             }
+           );
         }
-    }
-
-  }
-
-
-
-
-  
-
-
-
-//remember to close connection! #memory issues! 
-const afterConnection = () => {
-    connection.query('SELECT * FROM employee',(err, res) => {
-        if (err) throw err;
-        console.log(res);
+     );
+  };
         
 
-
-
-
-        connection.end();
-
-
-    })
-}
-*/
+  
