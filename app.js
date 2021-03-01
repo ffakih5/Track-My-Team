@@ -305,17 +305,34 @@ const options = () => {
 
 
 function updateRole() {
+    const employeeArray = [];
+    const roleArray = [];
+
+    connection.query.then((data) => {
+        (`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM team_db.employee` ,
+    (error, res) => {
+      if (error) throw error;
+    });
+
+
+
+    }
+
+
     inquirer
         .prompt([
             {
-                name: 'first_name',
-                type: 'input',
-                message: "What is the employee's first name?",
+                name: 'name',
+                type: 'rawlist',
+                choices: ,
+                message: "Whose srole are you updating?",
+
             },
             {
-                name: 'last_name',
+                name: 'role',
                 type: 'input',
-                message: "What is the employees last name?",
+                choices: ,
+                message: "What are you uodating their role to?",
             },
         ]).then ((data) => {
             connection.query('SELECT * FROM employee WHERE first_name = ? AND last_name = ? ;',[data.first_name, data.last_name], (err, res) => {
@@ -372,15 +389,7 @@ function updateRole() {
 
 
 
-    connection.query.then((data) => {
-        (`UPDATE employee SET role_id = ${data.title} WHERE id = ${data.role}`,
-    (error, res) => {
-      if (error) throw error;
-    });
-
-
-
-    }
+    
     
     inquirer
       .prompt([
