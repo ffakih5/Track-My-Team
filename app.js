@@ -312,6 +312,35 @@ function updateRole() {
         (`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM team_db.employee` ,
     (error, res) => {
       if (error) throw error;
+      for(let i = 0; i < res.length; i++){
+          employeeArray.push(res[i].employee);
+      }
+      connection.query(
+          `SELECT title FROM team_db.role`, (err, res) => {
+              if (err) throw err;
+              for(let i = 0; i <res.length; i++) {
+                  roleArray.push(res[i].title);
+              }
+              
+              inquirer
+                .prompt([
+                {
+                        name: 'name',
+                        type: 'rawlist',
+                        choices: employeeArray,
+                        message: "Whose srole are you updating?",
+        
+                },
+                {
+                        name: 'role',
+                        type: 'input',
+                        choices: roleArray,
+                        message: "What are you uodating their role to?",
+                },
+
+
+
+
     });
 
 
@@ -321,19 +350,7 @@ function updateRole() {
 
     inquirer
         .prompt([
-            {
-                name: 'name',
-                type: 'rawlist',
-                choices: ,
-                message: "Whose srole are you updating?",
-
-            },
-            {
-                name: 'role',
-                type: 'input',
-                choices: ,
-                message: "What are you uodating their role to?",
-            },
+            
         ]).then ((data) => {
             connection.query('SELECT * FROM employee WHERE first_name = ? AND last_name = ? ;',[data.first_name, data.last_name], (err, res) => {
                 if(err) throw err;
@@ -420,11 +437,7 @@ function updateRole() {
 
   /*function updateRole() {
 
-        connection.query('SELECT employee.last_name, roles.title FROM employee JOIN roles ON employee.role_id = roles.id;', (err, res) => {
         
-        if (err) throw err;
-        inquirer
-            .prompt([
                 {
                     name: 'last_name',
                     type: 'rawlist',
