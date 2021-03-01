@@ -16,4 +16,5 @@
 
 ## How to use:
 _click the link below_
+
 [Walkthrough video of how to use app](https://drive.google.com/file/d/1JoFQpHriVc5K87ywVKZdZvd0ADzloNi2/view?usp=sharing)
