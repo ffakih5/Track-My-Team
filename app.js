@@ -10,12 +10,6 @@ const connection = mysql.createConnection({
     database: 'team_db',
 });
 
-let employee_id;
-let role_options = [];
-let updatedRoleId;
-
-
-
 connection.connect((err) => {
     if (err) throw err;
     console.log(`connected as id ${connection.threadId}`);
@@ -158,11 +152,10 @@ const options = () => {
                     message: "What is this employee's role?",
                 }
             ]).then (function (answer) {
-                let role_id;
+                let empRole;
                 for (let r = 0; r < res.length; r++) {
                     if (res[r].title === answer.role) {
-                        role_id = res[i].id;
-                        console.log(role_id);
+                        empRole = res[i].id;
                     }
                 }
                 connection.query(
@@ -264,7 +257,7 @@ const options = () => {
 
 function updateRole() {
     const employeeArray = [];
-    const roleArray = [];
+    const rolesArray = [];
 
     connection.query(`SELECT CONCAT (employee.first_name, ' ', employee.last_name) as employee FROM employee` ,
     (error, res) => {
@@ -276,7 +269,7 @@ function updateRole() {
         `SELECT title FROM roles`, (err, res) => {
             if (err) throw err;
             for(let i = 0; i <res.length; i++) {
-                roleArray.push(res[i].title);
+                rolesArray.push(res[i].title);
             }
 
             inquirer
@@ -291,12 +284,12 @@ function updateRole() {
                 {
                         name: 'role',
                         type: 'input',
-                        choices: roleArray,
+                        choices: rolesArray,
                         message: "What are you updating their role to?",
                 },
             ]).then (answer => {
+                
                 let currentRole;
-                console.log(currentRole);
                 const name = answer.name.split(' ');
                 connection.query(
                     `SELECT id FROM roles WHERE title = '${answer}'`,
@@ -307,7 +300,7 @@ function updateRole() {
                     }
                     
                     connection.query(
-                        `UPDATE employee SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
+                        `UPDATE employee SET role_id = ${currentRole}WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
                         (err, res) => {
                             if(err) throw err;
                             console.log("This employee's role has now been updated");
