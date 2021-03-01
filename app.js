@@ -273,7 +273,7 @@ function updateRole() {
           employeeArray.push(res[i].employee);
       }
       connection.query(
-        `SELECT title FROM team_db.role`, (err, res) => {
+        `SELECT title FROM roles`, (err, res) => {
             if (err) throw err;
             for(let i = 0; i <res.length; i++) {
                 roleArray.push(res[i].title);
@@ -285,7 +285,7 @@ function updateRole() {
                         name: 'name',
                         type: 'rawlist',
                         choices: employeeArray,
-                        message: "Whose srole are you updating?",
+                        message: "Whose role are you updating?",
         
                 },
                 {
@@ -296,30 +296,32 @@ function updateRole() {
                 },
             ]).then (answer => {
                 let currentRole;
+                console.log(currentRole);
                 const name = answer.name.split(' ');
                 connection.query(
-                    `SELECT id FROM role WHERE title = '${answer.role}'`,
+                    `SELECT id FROM roles WHERE title = '${answer}'`,
                     (err, res) => {
                     if (err) throw err;
-                    for (let i = 0; d < res.length; i++){
+                    for (let i = 0; i < res.length; i++){
                     currentRole = res[i].id;
                     }
+                    
                     connection.query(
-                        `UPDATE role SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
+                        `UPDATE employee SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
                         (err, res) => {
                             if(err) throw err;
                             console.log("This employee's role has now been updated");
                             options();
-                           }
+                          }
                         );
                       }
-                    );
-                });
-            }
-           );
-        }
-     );
-  };
+                  );
+               });
+          }
+      );
+    }
+  );
+};
         
 
   
