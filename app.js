@@ -253,10 +253,14 @@ function updateRole() {
           employeeArray.push(res[i].employee);
       }
       connection.query(
-        `SELECT title FROM roles`, (err, res) => {
+        `SELECT id, title FROM roles`, (err, res) => {
             if (err) throw err;
             for(let i = 0; i <res.length; i++) {
-                rolesArray.push(res[i].title);
+                rolesArray.push({
+                    name:res[i].title, 
+                    value:res[i].id
+                }
+                );
             }
 
             inquirer
@@ -270,22 +274,22 @@ function updateRole() {
                 },
                 {
                         name: 'role',
-                        type: 'input',
+                        type: 'rawlist',
                         choices: rolesArray,
                         message: "What are you updating their role to?",
                 },
             ]).then (answer => {
-                
-                let currentRole;
+                console.log(answer);
+                let currentRole = answer.role;
                 const name = answer.name.split(' ');
-                connection.query(
+                /*//connection.query(
                     `SELECT id FROM roles WHERE title = '${answer}'`,
                     (err, res) => {
                     if (err) throw err;
                     for (let i = 0; i < res.length; i++){
                     currentRole = res[i].id;
                     }
-                    
+                    */
                     connection.query(
                         `UPDATE employee SET role_id = ${currentRole} WHERE first_name =  '${name[0]}' AND last_name = '${name[1]}';`,
                         (err, res) => {
@@ -294,8 +298,8 @@ function updateRole() {
                             options();
                           }
                         );
-                      }
-                  );
+                      //}
+                  //);
                });
           }
       );
