@@ -282,7 +282,7 @@ function updateRole() {
                 console.log(answer);
                 let currentRole = answer.role;
                 const name = answer.name.split(' ');
-                /*//connection.query(
+                /*connection.query(
                     `SELECT id FROM roles WHERE title = '${answer}'`,
                     (err, res) => {
                     if (err) throw err;
